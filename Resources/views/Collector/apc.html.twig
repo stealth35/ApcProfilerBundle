@@ -1,0 +1,89 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+{% block menu %}
+<span class="label">
+    <span class="icon">
+        <img width=30 src="{{ asset('bundles/webprofilerextra/images/twig.png') }}" />
+    </span>
+    <strong>APC</strong>
+    <span class="count">
+        <span>{{ collector.fileinfo.num_entries }}</span>
+        <span>{{ collector.userinfo.num_entries }}</span>
+    </span>
+</span>
+{% endblock %}
+{% block panel %}
+    <h2>General Cache Information</h2>
+    <table>
+        <tr>
+            <th>APC Version</th>
+            <td>{{ collector.version }}</td>
+        </tr>
+        <tr>
+            <th>Shared Memory</th>
+            <td>{{ collector.fileinfo.memory_type }}, {{ collector.fileinfo.locking_type }}</td>
+        </tr>
+        <tr>
+            <th>Start Time</th>
+            <td>{{ collector.fileinfo.start_time|date }}</td>
+        </tr>
+        <tr>
+            <th>File Upload Support</th>
+            <td>{{ collector.fileinfo.file_upload_progress ? 'enabled' : 'disabled' }}</td>
+        </tr>
+    </table>
+    <h2>File Cache Information</h2>
+    <table>
+        <tr>
+            <th>Cached Files</th>
+            <td>{{ collector.fileinfo.num_entries }}</td>
+        </tr>
+    </table>
+    <h2>User Cache Entries</h2>
+    <table>
+        <tr>
+            <th>User Entry Label</th>
+            <th>Hits</th>
+            <th>Size</th>
+            <th>Last accessed</th>
+            <th>Last modified</th>
+            <th>Created at</th>
+            <th>Timeout</th>
+            <th>Deleted at</th>
+        </tr>
+        {% for user in collector.userinfo.cache_list %}
+            <tr>
+                <td>{{ user.info }}</td>
+                <td>{{ user.num_hits }}</td>
+                <td>{{ user.mem_size }}</td>
+                <td>{{ user.access_time|date }}</td>
+                <td>{{ user.mtime|date}}</td>
+                <td>{{ user.creation_time|date }}</td>
+                <td>{{ user.ttl|date }}</td>
+                <td>{{ user.deletion_time|date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h2>System Cache Entries</h2>
+    <table>
+        <tr>
+            <th>Script Filename</th>
+            <th>Hits</th>
+            <th>Size</th>
+            <th>Last accessed</th>
+            <th>Last modified</th>
+            <th>Created at</th>
+            <th>Deleted at</th>
+        </tr>
+        {% for file in collector.fileinfo.cache_list %}
+            <tr>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.num_hits }}</td>
+                <td>{{ file.mem_size }}</td>
+                <td>{{ file.access_time|date }}</td>
+                <td>{{ file.mtime|date}}</td>
+                <td>{{ file.creation_time|date }}</td>
+                <td>{{ file.deletion_time|date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
