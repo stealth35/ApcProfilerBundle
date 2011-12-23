@@ -10,14 +10,32 @@ class ApcDataCollector extends DataCollector
 {
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $this->data['version'] = phpversion('apc');
-        $this->data['fileinfo'] = apc_cache_info('file');
-        $this->data['userinfo'] = apc_cache_info('user');
+        $reflector = new \ReflectionExtension('apc');
+
+        $fileinfo = apc_cache_info('file');
+        $userinfo = apc_cache_info('user');
+
+        $filelist = array_merge($fileinfo['cache_list'], $fileinfo['deleted_list']);
+        $userlist = array_merge($userinfo['cache_list'], $userinfo['deleted_list']);
+
+        $this->data = array(
+            'version'  => phpversion('apc'),
+            'ini'      => $reflector->getINIEntries(),
+            'fileinfo' => $fileinfo,
+            'userinfo' => $userinfo,
+            'filelist' => $filelist,
+            'userlist' => $userlist,
+        );
     }
 
     public function getVersion()
     {
         return $this->data['version'];
+    }
+
+    public function getIni()
+    {
+        return $this->data['ini'];
     }
 
     public function getFileInfo()
@@ -28,6 +46,16 @@ class ApcDataCollector extends DataCollector
     public function getUserInfo()
     {
         return $this->data['userinfo'];
+    }
+
+    public function getFileList()
+    {
+        return $this->data['filelist'];
+    }
+
+    public function getUserList()
+    {
+        return $this->data['userlist'];
     }
 
     public function getName()

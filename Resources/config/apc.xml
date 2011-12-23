@@ -11,7 +11,6 @@
     <services>
         <service id="apc_profiler.data_collector.apc" class="%apc_profiler.data_collector.apc.class%" public="false">
             <tag name="data_collector" template="ApcProfilerBundle:Collector:apc" id="apc" />
-
         </service>
     </services>
 </container>

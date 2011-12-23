@@ -1,4 +1,21 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+{% set icon %}
+        <img width="21" height="28" alt="APC" style="border-width: 0; vertical-align: middle; margin-right: 5px;" src=""/>
+    {% endset %}
+{% set text %}
+        {% spaceless %}
+            {% if verbose %}
+                <span>{{ collector.fileinfo.num_entries }}</span>
+                <span style="margin: 0; padding: 0; color: #979696;">|</span>
+                <span>{{ collector.userinfo.num_entries }}</span>
+            {% endif %}
+        {% endspaceless %}
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
 {% block menu %}
 <span class="label">
     <span class="icon">
@@ -30,12 +47,39 @@
             <th>File Upload Support</th>
             <td>{{ collector.fileinfo.file_upload_progress ? 'enabled' : 'disabled' }}</td>
         </tr>
+        <tr>
+            <th>Cache By Default</th>
+            <td>{{ collector.ini['apc.cache_by_default'] ? 'enabled' : 'disabled' }}</td>
+        </tr>
     </table>
     <h2>File Cache Information</h2>
     <table>
         <tr>
             <th>Cached Files</th>
             <td>{{ collector.fileinfo.num_entries }}</td>
+        </tr>
+        <tr>
+            <th>Hits</th>
+            <td>{{ collector.fileinfo.num_hits }}</td>
+        </tr>
+        <tr>
+            <th>Misses</th>
+            <td>{{ collector.fileinfo.num_misses }}</td>
+        </tr>
+    </table>
+    <h2>User Cache Information</h2>
+    <table>
+        <tr>
+            <th>Cached Variables</th>
+            <td>{{ collector.userinfo.num_entries }}</td>
+        </tr>
+        <tr>
+            <th>Hits</th>
+            <td>{{ collector.userinfo.num_hits }}</td>
+        </tr>
+        <tr>
+            <th>Misses</th>
+            <td>{{ collector.userinfo.num_misses }}</td>
         </tr>
     </table>
     <h2>User Cache Entries</h2>
@@ -50,7 +94,7 @@
             <th>Timeout</th>
             <th>Deleted at</th>
         </tr>
-        {% for user in collector.userinfo.cache_list %}
+        {% for user in collector.userlist %}
             <tr>
                 <td>{{ user.info }}</td>
                 <td>{{ user.num_hits }}</td>
@@ -58,8 +102,8 @@
                 <td>{{ user.access_time|date }}</td>
                 <td>{{ user.mtime|date}}</td>
                 <td>{{ user.creation_time|date }}</td>
-                <td>{{ user.ttl|date }}</td>
-                <td>{{ user.deletion_time|date }}</td>
+                <td>{{ user.ttl ? user.ttl|date : 'None' }}</td>
+                <td>{{ user.deletion_time ? user.deletion_time|date : 'None' }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -74,7 +118,7 @@
             <th>Created at</th>
             <th>Deleted at</th>
         </tr>
-        {% for file in collector.fileinfo.cache_list %}
+        {% for file in collector.filelist %}
             <tr>
                 <td>{{ file.filename }}</td>
                 <td>{{ file.num_hits }}</td>
@@ -82,7 +126,7 @@
                 <td>{{ file.access_time|date }}</td>
                 <td>{{ file.mtime|date}}</td>
                 <td>{{ file.creation_time|date }}</td>
-                <td>{{ file.deletion_time|date }}</td>
+                <td>{{ file.deletion_time ? file.deletion_time|date : 'None' }}</td>
             </tr>
         {% endfor %}
     </table>
