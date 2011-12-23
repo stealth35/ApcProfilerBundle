@@ -19,6 +19,10 @@ class ApcProfilerExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        if (!extension_loaded('apc')) {
+            return;
+        }
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
