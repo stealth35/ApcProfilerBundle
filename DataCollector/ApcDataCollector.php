@@ -21,10 +21,12 @@ class ApcDataCollector extends DataCollector
         $this->data = array(
             'version'  => phpversion('apc'),
             'ini'      => $reflector->getINIEntries(),
+            'smainfo'  => apc_sma_info(),
             'fileinfo' => $fileinfo,
             'userinfo' => $userinfo,
             'filelist' => $filelist,
             'userlist' => $userlist,
+            'docroot'  => $request->server->get('document-root')
         );
     }
 
@@ -36,6 +38,11 @@ class ApcDataCollector extends DataCollector
     public function getIni()
     {
         return $this->data['ini'];
+    }
+
+    public function getSmaInfo()
+    {
+        return $this->data['smainfo'];
     }
 
     public function getFileInfo()

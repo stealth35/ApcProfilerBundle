@@ -10,6 +10,8 @@
                 <span>{{ collector.fileinfo.num_entries }}</span>
                 <span style="margin: 0; padding: 0; color: #979696;">|</span>
                 <span>{{ collector.userinfo.num_entries }}</span>
+                <span style="margin: 0; padding: 0; color: #979696;">|</span>
+                <span>{{ '%.1f'|format((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / 1024 / 1024) }} MB</span>
             {% endif %}
         {% endspaceless %}
     {% endset %}
@@ -25,6 +27,7 @@
     <span class="count">
         <span>{{ collector.fileinfo.num_entries }}</span>
         <span>{{ collector.userinfo.num_entries }}</span>
+        <span>{{ '%.1f'|format((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / 1024 / 1024) }} MB</span>
     </span>
 </span>
 {% endblock %}
@@ -32,12 +35,23 @@
     <h2>General Cache Information</h2>
     <table>
         <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <tr>
             <th>APC Version</th>
             <td>{{ collector.version }}</td>
         </tr>
         <tr>
             <th>Shared Memory</th>
-            <td>{{ collector.fileinfo.memory_type }}, {{ collector.fileinfo.locking_type }}</td>
+            <td>
+            {{ collector.smainfo.num_seg }}
+            {% transchoice collector.smainfo.num_seg %}
+            {1} Segment|]1,Inf]Segments
+            {% endtranschoice %}
+            with {{ '%.1f'|format(collector.smainfo.num_seg * collector.smainfo.seg_size / 1024 / 1024) }} MB<br />
+            ({{ collector.fileinfo.memory_type }}, {{ collector.fileinfo.locking_type }})
+            </td>
         </tr>
         <tr>
             <th>Start Time</th>
@@ -52,8 +66,40 @@
             <td>{{ collector.ini['apc.cache_by_default'] ? 'enabled' : 'disabled' }}</td>
         </tr>
     </table>
+    <h2>Memory Usage and Fragmentation</h2>
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Size</th>
+            <th>Parcent</th>
+        </tr>
+        <tr>
+            <th>Memory Free</th>
+            <td>{{ '%.1f'|format(collector.smainfo.avail_mem / 1024 / 1024) }} MB</td>
+            <td>{{ '%.1f'|format((collector.smainfo.avail_mem / (collector.smainfo.num_seg * collector.smainfo.seg_size)) * 100 )}}%</td>
+        </tr>
+        <tr>
+            <th>Memory Used</th>
+            <td>{{ '%.1f'|format((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / 1024 / 1024) }} MB</td>
+            <td>{{ '%.1f'|format(((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / (collector.smainfo.num_seg * collector.smainfo.seg_size)) * 100 )}}%</td>
+        </tr>
+        <tr>
+            <th>Hits Status</th>
+            <td>{{ collector.fileinfo.num_hits + collector.userinfo.num_hits }}</td>
+            <td>{{ '%.1f'|format(((collector.fileinfo.num_hits + collector.userinfo.num_hits) / (collector.fileinfo.num_hits + collector.userinfo.num_hits + collector.fileinfo.num_misses + collector.userinfo.num_misses)) * 100 )}}%</td>
+        </tr>
+        <tr>
+            <th>Misses Status</th>
+            <td>{{ collector.fileinfo.num_misses + collector.userinfo.num_misses }}</td>
+            <td>{{ '%.1f'|format(((collector.fileinfo.num_misses + collector.userinfo.num_misses) / (collector.fileinfo.num_hits + collector.userinfo.num_hits + collector.fileinfo.num_misses + collector.userinfo.num_misses)) * 100 )}}%</td>
+        </tr>
+    </table>
     <h2>File Cache Information</h2>
     <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
         <tr>
             <th>Cached Files</th>
             <td>{{ collector.fileinfo.num_entries }}</td>
@@ -69,6 +115,10 @@
     </table>
     <h2>User Cache Information</h2>
     <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
         <tr>
             <th>Cached Variables</th>
             <td>{{ collector.userinfo.num_entries }}</td>
@@ -99,11 +149,11 @@
                 <td>{{ user.info }}</td>
                 <td>{{ user.num_hits }}</td>
                 <td>{{ user.mem_size }}</td>
-                <td>{{ user.access_time|date }}</td>
-                <td>{{ user.mtime|date}}</td>
-                <td>{{ user.creation_time|date }}</td>
-                <td>{{ user.ttl ? user.ttl|date : 'None' }}</td>
-                <td>{{ user.deletion_time ? user.deletion_time|date : 'None' }}</td>
+                <td>{{ user.access_time|date('Y-m-d H:i:s') }}</td>
+                <td>{{ user.mtime|date('Y-m-d H:i:s') }}</td>
+                <td>{{ user.creation_time|date('Y-m-d H:i:s') }}</td>
+                <td>{{ user.ttl ? user.ttl|date('Y-m-d H:i:s') : 'None' }}</td>
+                <td>{{ user.deletion_time ? user.deletion_time|date('Y-m-d H:i:s') : 'None' }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -123,10 +173,10 @@
                 <td>{{ file.filename }}</td>
                 <td>{{ file.num_hits }}</td>
                 <td>{{ file.mem_size }}</td>
-                <td>{{ file.access_time|date }}</td>
-                <td>{{ file.mtime|date}}</td>
-                <td>{{ file.creation_time|date }}</td>
-                <td>{{ file.deletion_time ? file.deletion_time|date : 'None' }}</td>
+                <td>{{ file.access_time|date('Y-m-d H:i:s') }}</td>
+                <td>{{ file.mtime|date('Y-m-d H:i:s') }}</td>
+                <td>{{ file.creation_time|date('Y-m-d H:i:s') }}</td>
+                <td>{{ file.deletion_time ? file.deletion_time|date('Y-m-d H:i:s') : 'None' }}</td>
             </tr>
         {% endfor %}
     </table>
