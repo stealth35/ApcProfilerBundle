@@ -1,10 +1,10 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
-{% set icon %}
+    {% set icon %}
         <img width="21" height="28" alt="APC" style="border-width: 0; vertical-align: middle; margin-right: 5px;" src=""/>
     {% endset %}
-{% set text %}
+    {% set text %}
         {% spaceless %}
             {% if verbose %}
                 <span>{{ collector.fileinfo.num_entries }}</span>
@@ -64,6 +64,10 @@
         <tr>
             <th>Cache By Default</th>
             <td>{{ collector.ini['apc.cache_by_default'] ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>Serializer</th>
+            <td>{{ collector.ini['apc.serializer']  == 'default' ? 'php' : collector.ini['apc.serializer'] }}</td>
         </tr>
     </table>
     <h2>Memory Usage and Fragmentation</h2>
