@@ -26,7 +26,6 @@ class ApcDataCollector extends DataCollector
             'userinfo' => $userinfo,
             'filelist' => $filelist,
             'userlist' => $userlist,
-            'docroot'  => $request->server->get('document-root')
         );
     }
 
