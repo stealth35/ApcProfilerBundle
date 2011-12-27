@@ -150,7 +150,7 @@
         </tr>
         {% for user in collector.userlist %}
             <tr>
-                <td>{{ user.info }}</td>
+                <td {{ user.deletion_time ? 'style="color:#888"' : '' }}>{{ user.info }}</td>
                 <td>{{ user.num_hits }}</td>
                 <td>{{ user.mem_size }}</td>
                 <td>{{ user.access_time|date('Y-m-d H:i:s') }}</td>
@@ -174,7 +174,7 @@
         </tr>
         {% for file in collector.filelist %}
             <tr>
-                <td>{{ file.filename }}</td>
+                <td {{ file.deletion_time ? 'style="color:#888"' : '' }}>{{ file.filename }}</td>
                 <td>{{ file.num_hits }}</td>
                 <td>{{ file.mem_size }}</td>
                 <td>{{ file.access_time|date('Y-m-d H:i:s') }}</td>
