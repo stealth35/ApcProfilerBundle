@@ -62,6 +62,10 @@
             <td>{{ collector.fileinfo.file_upload_progress ? 'enabled' : 'disabled' }}</td>
         </tr>
         <tr>
+            <th>File Hits Support</th>
+            <td>{{ collector.fileinfo != collector.filehitslist ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
             <th>Cache By Default</th>
             <td>{{ collector.ini['apc.cache_by_default'] ? 'enabled' : 'disabled' }}</td>
         </tr>
@@ -116,6 +120,12 @@
             <th>Misses</th>
             <td>{{ collector.fileinfo.num_misses }}</td>
         </tr>
+        {% if collector.fileinfo != collector.filehitslist %}
+        <tr>
+            <th>Hits for this request</th>
+            <td>{{ collector.filehitslist|length }}</td>
+        </tr>
+        {% endif %}
     </table>
     <h2>User Cache Information</h2>
     <table>
@@ -173,8 +183,15 @@
             <th>Deleted at</th>
         </tr>
         {% for file in collector.filelist %}
+            {% if file.filename in collector.filehitslist %}
+                {% set color = 'style="color:#55F;font-weight:bold"' %}
+            {% elseif file.deletion_time %}
+                {% set color = 'style="color:#888;text-decoration:strike"' %}
+            {% else %}
+                {% set color = '' %}
+            {% endif %}
             <tr>
-                <td {{ file.deletion_time ? 'style="color:#888"' : '' }}>{{ file.filename }}</td>
+                <td {{ color|raw }}>{{ file.filename }}</td>
                 <td>{{ file.num_hits }}</td>
                 <td>{{ file.mem_size }}</td>
                 <td>{{ file.access_time|date('Y-m-d H:i:s') }}</td>

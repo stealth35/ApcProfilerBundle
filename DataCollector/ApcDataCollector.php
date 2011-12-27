@@ -12,7 +12,7 @@ class ApcDataCollector extends DataCollector
     {
         $reflector = new \ReflectionExtension('apc');
 
-        $fileinfo = apc_cache_info('file');
+        $fileinfo = apc_cache_info();
         $userinfo = apc_cache_info('user');
 
         $filelist = array_merge($fileinfo['cache_list'], $fileinfo['deleted_list']);
@@ -26,6 +26,7 @@ class ApcDataCollector extends DataCollector
             'userinfo' => $userinfo,
             'filelist' => $filelist,
             'userlist' => $userlist,
+            'filehitslist' => apc_cache_info('filehits')
         );
     }
 
@@ -62,6 +63,11 @@ class ApcDataCollector extends DataCollector
     public function getUserList()
     {
         return $this->data['userlist'];
+    }
+
+    public function getFileHitsList()
+    {
+        return $this->data['filehitslist'];
     }
 
     public function getName()
