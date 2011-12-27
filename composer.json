@@ -1,0 +1,20 @@
+{
+    "name": "stealth35/apc-profiler-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony ApcProfilerBundle",
+    "keywords": ["apc"],
+    "homepage": "https://github.com/stealth35/ApcProfilerBundle",
+    "license": "MIT",
+    "authors": [
+        {"name": "Stealth35"}
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "ext-apc": ">= 2.0.0",
+        "symfony/framework-bundle": "2.0.*"
+    },
+    "autoload": {
+        "psr-0": { "Stealth35\\ApcProfilerBundle": "" }
+    },
+    "target-dir": "Stealth35/ApcProfilerBundle"
+}
