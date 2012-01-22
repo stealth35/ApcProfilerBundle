@@ -6,7 +6,7 @@
         git=http://github.com/stealth35/ApcProfilerBundle.git
         target=bundles/Stealth35/ApcProfilerBundle
 
-Install via Symfony2:
+### Update the vendors
 
     php bin/vendors install
 
