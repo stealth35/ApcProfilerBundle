@@ -1,6 +1,6 @@
 # ApcProfilerBundle
 
-## Installation and configuration:
+## Installation:
 
     [ApcProfilerBundle]
         git=http://github.com/stealth35/ApcProfilerBundle.git
