@@ -19,7 +19,14 @@ class ApcProfilerExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        // apc extension not loaded
         if (!extension_loaded('apc')) {
+            return;
+        }
+        // apc extension not enabled
+        try {
+            apc_cache_info();
+        } catch (\Exception $e) {
             return;
         }
 
