@@ -23,10 +23,8 @@ class ApcProfilerExtension extends Extension
         if (!extension_loaded('apc')) {
             return;
         }
-        // apc extension not enabled
-        try {
-            apc_cache_info();
-        } catch (\Exception $e) {
+        // apc extension not enabled for cli
+        if ('cli' == php_sapi_name() && !ini_get('apc.enable_cli')) {
             return;
         }
 
