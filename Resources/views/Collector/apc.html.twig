@@ -69,10 +69,12 @@
             <th>Cache By Default</th>
             <td>{{ collector.ini['apc.cache_by_default'] ? 'enabled' : 'disabled' }}</td>
         </tr>
+        {% if collector.ini['apc.serializer'] is defined %}
         <tr>
             <th>Serializer</th>
             <td>{{ collector.ini['apc.serializer']  == 'default' ? 'php' : collector.ini['apc.serializer'] }}</td>
         </tr>
+        {% endif %}
     </table>
     <h2>Memory Usage and Fragmentation</h2>
     <table>
