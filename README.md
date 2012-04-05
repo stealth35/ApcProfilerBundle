@@ -30,7 +30,7 @@ $loader->registerNamespaces(array(
     {
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             // ...
-            $bundles[] = new Stealth35\ApcProfilerBundle\ApcProfilerBundle(),
+            $bundles[] = new Stealth35\ApcProfilerBundle\ApcProfilerBundle();
             // ...
         }
     }
