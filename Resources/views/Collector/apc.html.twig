@@ -6,13 +6,11 @@
     {% endset %}
     {% set text %}
         {% spaceless %}
-            {% if verbose %}
-                <span>{{ collector.fileinfo.num_entries }}</span>
-                <span style="margin: 0; padding: 0; color: #979696;">|</span>
-                <span>{{ collector.userinfo.num_entries }}</span>
-                <span style="margin: 0; padding: 0; color: #979696;">|</span>
-                <span>{{ '%.1f'|format((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / 1024 / 1024) }} MB</span>
-            {% endif %}
+            <span>{{ collector.fileinfo.num_entries }}</span>
+            <span style="margin: 0; padding: 0; color: #979696;">|</span>
+            <span>{{ collector.userinfo.num_entries }}</span>
+            <span style="margin: 0; padding: 0; color: #979696;">|</span>
+            <span>{{ '%.1f'|format((collector.smainfo.num_seg * collector.smainfo.seg_size - collector.smainfo.avail_mem) / 1024 / 1024) }} MB</span>
         {% endspaceless %}
     {% endset %}
     {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
