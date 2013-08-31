@@ -1,25 +1,21 @@
 # ApcProfilerBundle
 
-## Installation:
+### Add the package to your dependencies
 
-    [ApcProfilerBundle]
-        git=http://github.com/stealth35/ApcProfilerBundle.git
-        target=bundles/Stealth35/ApcProfilerBundle
+``` json
+{
+    "require": {
+        "stealth35/apc-profiler-bundle": "dev-master"
+        ...
+    }
+}
+```
+
 
 ### Update the vendors
 
-    php bin/vendors install
+    php composer.phar update
 
-### Add the namespaces to your autoloader
-
-``` php
-<?php
-// File: app/autoload.php
-$loader->registerNamespaces(array(
-    'Stealth35'         => __DIR__.'/../vendor/bundles',
-    // ...
-));
-```
 
 ### Add ApcProfilerBundle to your application kernel
 
